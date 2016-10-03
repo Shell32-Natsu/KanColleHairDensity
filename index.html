@@ -1,243 +1,52 @@
 <!DOCTYPE html>
-<html lang="zh" >
-<head>
-    <title>舰C肝度计算器</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-offset-3 col-sm-6 col-xs-12">
-                <h1>舰C肝度计算器</h1>
-                <p id="instruction"></p>
-            </div>
-        </div>
-        <div class="row">
-            <form role="form" class="col-sm-offset-3 col-sm-6 col-xs-12">
-                <div class="form-group">
-                    <label>选择算法</label>
-                    <select class="form-control" id="methodSelect">
-                        <option>肝度算法1</option>
-                        <option>肝度算法2</option>
-                        <option>战果算法</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>出击胜数</label>
-                    <input type="number" class="form-control" id="battleWin" placeholder="出击胜数">
-                </div>
-                <div class="form-group">
-                    <label>出击败数</label>
-                    <input type="number" class="form-control" id="battleLoss" placeholder="出击败数">
-                </div>
-                <div class="form-group">
-                    <label>演习胜数</label>
-                    <input type="number" class="form-control" id="yxWin" placeholder="演习胜数">
-                </div>
-                <div class="form-group">
-                    <label>演习败数</label>
-                    <input type="number" class="form-control" id="yxLoss" placeholder="演习败数">
-                </div>
-                <div class="form-group">
-                    <label>远征回数</label>
-                    <input type="number" class="form-control" id="yzNum" placeholder="远征回数">
-                </div>
-                <div class="form-group">
-                    <label>入坑时间</label>
-                    <input type="date" class="form-control" id="beginDate" value="2016-01-01">
-                </div>
-                <div class="form-group">
-                    <label>提督等级</label>
-                    <input type="number" class="form-control" id="tdLevel" placeholder="提督等级">
-                </div>
-                <div class="form-group" style="display: none;">
-                    <label>总经验值</label>
-                    <input type="number" class="form-control" id="jy" placeholder="总经验值">
-                </div>
-                <button type="button" class="btn btn-default" id="calcBtn">计算</button>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col-sm-offset-3 col-sm-3 col-xs-12">
-                <p id="result" style="margin: 1rem; font-size: 1.5rem;"></p>
-                <p id="comment" style="margin: 1.5rem; font-size: 1.8rem;"></p>
-            </div>
-        </div>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Kancollehairdensity : ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Kancollehairdensity</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/xiadong1994/KanColleHairDensity">View on GitHub</a>
+
+          <h1 id="project_title">Kancollehairdensity</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/xiadong1994/KanColleHairDensity/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/xiadong1994/KanColleHairDensity/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
     </div>
-</body>
-<script type="application/javascript">
-    var curMethod = 1;
-    var Instruction1 = "<a href='http://shynez.com/blog/enjoy/2015/12/29/244.asuka' target='_blank'>公式来源</a><br>公式: 肝度 = ((出击胜数+出击败数)/20+(演习胜数+演习败数)/5+远征回数/10)/3/游戏天数/(1+提督等级/500)";
-    $("#instruction").html(Instruction1);
-    var Instruction2 = "<a href='http://bbs.ngacn.cc/read.php?tid=8303370' target='_blank'>公式来源</a><br>公式: 肝度 = (提督经验/350+出击胜数)/(游戏天数*10)<br>这个公式体感偏低, 进Boss多会偏肝(武罡寺的胜利).";
-    var Instruction3 = "<a href='http://bbs.ngacn.cc/read.php?tid=8302120' target='_blank'>公式来源</a><br>公式: 肝度 = 提督经验/出击胜数";
 
-    $("#calcBtn").click(function(){
-        $("#comment").text("");
-        $("#result").text("");
-        switch (curMethod){
-            case 1:
-                method1();
-                break;
-            case 2:
-                method2();
-                break;
-            case 3:
-                method3();
-                break;
-            default:
-                break;
-        }
-    });
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="kancollehairdensity" class="anchor" href="#kancollehairdensity" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>KanColleHairDensity</h1>
 
-    $("#methodSelect").change(function(){
-        switch ($("#methodSelect").val()){
-            case "肝度算法2":
-                curMethod = 2;
-                $("#battleWin").parent().show();
-                $("#battleLoss").parent().hide();
-                $("#yxWin").parent().hide();
-                $("#yxLoss").parent().hide();
-                $("#yzNum").parent().hide();
-                $("#beginDate").parent().show();
-                $("#tdLevel").parent().hide();
-                $("#jy").parent().show();
-                $("#instruction").html(Instruction2);
-                break;
-            case "战果算法":
-                curMethod = 3;
-                $("#battleWin").parent().show();
-                $("#battleLoss").parent().hide();
-                $("#yxWin").parent().hide();
-                $("#yxLoss").parent().hide();
-                $("#yzNum").parent().hide();
-                $("#beginDate").parent().hide();
-                $("#tdLevel").parent().hide();
-                $("#jy").parent().show();
-                $("#instruction").html(Instruction3);
-                break;
-            case "肝度算法1":
-            default:
-                curMethod = 1;
-                $("#battleWin").parent().show();
-                $("#battleLoss").parent().show();
-                $("#yxWin").parent().show();
-                $("#yxLoss").parent().show();
-                $("#yzNum").parent().show();
-                $("#beginDate").parent().show();
-                $("#tdLevel").parent().show();
-                $("#jy").parent().hide();
-                $("#instruction").html(Instruction1);
-                break;
-        }
-    });
+<p>简单的舰C肝度计算器, 三个公式, 纯属娱乐.</p>
+      </section>
+    </div>
 
-    function method1(){
-        var battleWin = Number($("#battleWin").val() ? $("#battleWin").val() : 0);
-        var battleLoss = Number($("#battleLoss").val() ? $("#battleLoss").val() : 0);
-        var yxWin = Number($("#yxWin").val() ? $("#yxWin").val() : 0);
-        var yxLoss = Number($("#yxLoss").val() ? $("#yxLoss").val() : 0);
-        var yzNum = Number($("#yzNum").val() ? $("#yzNum").val() : 0);
-        var date = new Date();
-        var beginDate = $("#beginDate").val();
-        var time = date.getTime() - Date.parse(beginDate);
-        if(!beginDate || time < 0){
-            $("#comment").text("还没入坑凑什么热闹......");
-            return;
-        }
-        time = time / (1000 * 60 * 60 * 24);
-        var tdLevel = Number($("#tdLevel").val() ? $("#tdLevel").val() : 1);
-        var result = ((battleLoss + battleWin) / 20 + (yxLoss + yxWin) / 5 + yzNum / 10) / 3 / time / (1 + tdLevel / 500);
-        $("#result").text(result.toString());
-        var comment;
-        if(result >= 0 && result < 0.5){
-            comment = "你真的是提督?";
-        }
-        else if(result >= 0.5 && result < 1){
-            comment = "修仙提督";
-        }
-        else if(result >= 1 && result < 2){
-            comment = "普通提督";
-        }
-        else if(result >= 2 && result < 3){
-            comment = "肝帝";
-        }
-        else{
-            comment = "兄弟, 要假发吗?<br><img src='http://img.ngacn.cc/attachments/mon_201506/12/-1875510_557a661fe381e.gif'>";
-        }
-        $("#comment").html(comment);
-    }
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Kancollehairdensity maintained by <a href="https://github.com/xiadong1994">xiadong1994</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
-    function method2(){
-        var battleWin = Number($("#battleWin").val() ? $("#battleWin").val() : 0);
-        var tdJy = Number($("#jy").val() ? $("#jy").val() : 0);
-        var date = new Date();
-        var beginDate = $("#beginDate").val();
-        var time = date.getTime() - Date.parse(beginDate);
-        if(!beginDate || time < 0){
-            $("#comment").text("还没入坑凑什么热闹......");
-            return;
-        }
-        time = time / (1000 * 60 * 60 * 24);
-        var result = (tdJy / 350 + battleWin) / (time * 10);
-        $("#result").text(result.toString());
-        var comment;
-        if(result < 5){
-            comment = "懒癌发作/AFK?";
-        }
-        else if(result >= 5 && result < 10){
-            comment = "休闲提督";
-        }
-        else if(result >= 10 && result < 15){
-            comment = "正常提督";
-        }
-        else if(result >= 15 && result < 20){
-            comment = "勤奋提督";
-        }
-        else if(result >= 20 && result < 25){
-            comment = "肝帝";
-        }
-        else if(result >= 25 && result < 30){
-            comment = "大发动肝";
-        }
-        else if(result >= 30){
-            comment = "课金壕/数学家";
-        }
-        $("#comment").html(comment);
-    }
+    
 
-    function method3(){
-        var battleWin = Number($("#battleWin").val() ? $("#battleWin").val() : 0);
-        var tdJy = Number($("#jy").val() ? $("#jy").val() : 0);
-        var result = tdJy / battleWin;
-        $("#result").text(result.toString());
-        var comment;
-        if(result < 100){
-            comment = "R U KIDDING me?"
-        }
-        else if(result >= 100 && result < 200){
-            comment = "爆肝升级,刷闪";
-        }
-        else if(result >= 200 && result < 300){
-            comment = "肝舰娘升级,刷闪";
-        }
-        else if(result >= 300 && result < 400){
-            comment = "普通提督的一员";
-        }
-        else if(result >= 400 && result < 500){
-            comment = "以刷战果为中心活动";
-        }
-        else if(result >= 500 && result < 600){
-            comment = "爆肝刷战果";
-        }
-        else{
-            comment = "战果之神!<br><img src='http://img.ngacn.cc/attachments/mon_201506/12/-1875510_557a661fe381e.gif'>";
-        }
-        $("#comment").html(comment);
-    }
-</script>
+  </body>
 </html>
